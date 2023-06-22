@@ -1,6 +1,5 @@
 import {useState, useEffect} from 'react'
-import {Text, View, Alert, Pressable, StyleSheet, Image, TextInput} from 'react-native'
-import { Keyboard, TouchableWithoutFeedback } from 'react-native'
+import {Text, View, Pressable, StyleSheet, Image, TextInput,Keyboard, TouchableWithoutFeedback  } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DismissKeyboard = ({children}) => (
@@ -10,23 +9,52 @@ const DismissKeyboard = ({children}) => (
 )
 
 function Login({navigation}) {
-        const [name, setName] = useState('')
+        const [username, setName] = useState('')
         const [password, setPassword] = useState('')
+        const [errorMsg, setErrorMsg] = useState("")
+        const [isError, setErrorPossible] = useState(false)
+        
+        useEffect(() => {
+            getData();
+        }, []);
+    
+        const getData = () => {
+            try {
+                AsyncStorage.getItem('Username')
+                    .then(value => {
+                        if (value != null) {
+                            navigation.navigate('home');
+                        }
+                    })
+            } catch (error) {
+                console.log(error);
+            }
+        }
 
-        const onPressHandler = async() => {
-            if (name.length === 0 || password.length === 0){
-                 Alert.alert('Warning', 'Provide your Username and Password')
-            }
-            else if (password.length<7){
-                Alert.alert('Warning', 'Provide atleast 7 Characters for strong password')
-            }
-            else {
-                try {
-                    await AsyncStorage.setItem('Username', name);
-                    navigation.navigate('home');
-                } catch (error) {
-                    console.log(error);
+       
+
+        const onPressHandler = async () => {
+
+            const userDetails = {username, password}
+            const url = 'https://apis.ccbp.in/login'
+            const options = {
+                    method: 'POST',
+                    body: JSON.stringify(userDetails),
                 }
+            const response = await fetch(url, options)
+            const data = await response.json()
+           
+
+            if (response.ok){
+                setErrorPossible(false)
+                setName('')
+                setPassword('')
+                await AsyncStorage.setItem('Username', username);
+                navigation.navigate('home');
+            }
+            else{
+                setErrorPossible(true)
+                setErrorMsg(data.error_msg)
             }
         }
 
@@ -37,12 +65,13 @@ function Login({navigation}) {
                 <Image style={styles.ImageLogo} source={{uri: 'https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-light-theme-img.png'}}/>
                 <View style={styles.Username}>
                     <Text style={styles.InputText}>Username</Text>
-                    <TextInput style={styles.InputEl} placeholder='Enter your username' value={name} onChangeText={setName}/>
+                    <TextInput style={styles.InputEl} placeholder='Enter your username' value={username} onChangeText={setName}/>
                 </View>
                 <View style={styles.Username}>
                     <Text style={styles.InputText}>Password</Text>
                     <TextInput secureTextEntry style={styles.InputEl} placeholder='Enter your password' value={password} onChangeText={setPassword}/>
                 </View>
+                {isError && <Text style={styles.ErrorText}>*{errorMsg}</Text>}
                 <Pressable onPress={onPressHandler} style={({pressed}) => [{backgroundColor: pressed? '#7e858e' : '#1e293b'},styles.PressButton]}>
                     <Text style={styles.ButtonText}>Login</Text>
                 </Pressable>
@@ -61,7 +90,7 @@ const styles = StyleSheet.create({
         flex:1,
         justifyContent:'center',
         alignItems:'center',
-        backgroundColor:'#ffffff',
+        backgroundColor:'#f4f4f4',
     },
 
     ImageLogo: {
@@ -109,5 +138,10 @@ const styles = StyleSheet.create({
         padding:35,
         borderColor:'#475569',
         borderRadius: 8,
+    },
+    ErrorText: {
+        color: '#ff0000',
+        marginVertical:5,
+        fontSize:16,
     }
 })

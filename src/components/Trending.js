@@ -1,7 +1,6 @@
 import {Component} from 'react'
-import {Text, StatusBar, View, FlatList, Pressable, RefreshControl, Image, StyleSheet} from 'react-native'
+import { StatusBar, View, FlatList, StyleSheet} from 'react-native'
 import RenderAllVideos  from './RenderAllVideos'
-import Header from './Header'
 
 class Trending extends Component{
     state = {homeVideos: []}
@@ -41,7 +40,6 @@ class Trending extends Component{
             
                 <View style={Styles.MainContainer}>
                   <StatusBar/>
-                    <Header/>
                     <FlatList data={homeVideos} 
                     renderItem={({item}) => (
                       <RenderAllVideos videodetails={item}/>
@@ -58,7 +56,7 @@ export default Trending
 const Styles = StyleSheet.create({
   MainContainer: {
     flex:1,
-    backgroundColor: ' #ffffff',
+    backgroundColor: '#ffffff',
   },
   ImageEdit:{
     width:'100%'
@@ -68,32 +66,4 @@ ImgaeControl: {
   height:200,
   width:'100%'
 },
-HeaderContainer: {
-  height:40,
-  marginTop:20,
-  backgroundColor: ' #f1f5f9',
-
-},
-HeaderLogo: {
-  height:30,
-  width:140,
-  marginLeft:6,
-},
-PressButton: {
-  height:40,
-  width:100,
-  justifyContent:'center',
-  alignItems:'center',
-  marginRight:10,
-},
-ButtonText: {
-  fontSize:20,
-  color:'#ffffff'
-},
-HeaderContent:{
-  flex:1,
-  flexDirection:'row',
-  justifyContent:"space-between",
-  alignItems:'center',
-}
 })

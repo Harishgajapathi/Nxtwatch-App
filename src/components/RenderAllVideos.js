@@ -1,12 +1,28 @@
-import {Component} from 'react'
-import {Text, View, FlatList, ScrollView, StyleSheet, Image} from 'react-native'
+import {Text, View, StyleSheet, Image, Pressable} from 'react-native'
+import { useNavigation } from '@react-navigation/native'
+import ReactContext from '../../context/ReactContext'
 
 
-class RenderAllVideos extends Component{
-    render(){
-        const {videodetails} = this.props
-        const {title, thumbnailUrl, viewCount, publishedAt, name, profileImageUrl} = videodetails 
+const RenderAllVideos = (props) => {
+        const {videodetails} = props
+        const {id, title, thumbnailUrl, viewCount, publishedAt, name, profileImageUrl} = videodetails 
+        const navigation = useNavigation()
+
         return(
+          <ReactContext.Consumer>
+            {value => {
+                 
+                 const {onChangeActiveId} = value
+
+                 const onPressVideo = () => {
+                  navigation.navigate("VideoPlayer", {activeVideoId: id})
+                  onChangeActiveId(id)
+                 }
+
+                
+                return(
+                  <View>
+          <Pressable style={{cursor:'pointer'}} onPress={onPressVideo}>
               <View style={Styles.ListContainer}>
                   <Image style={Styles.ImageControl} source={{uri: thumbnailUrl}}/>
                 <View style={Styles.SubListsContainer}>
@@ -18,9 +34,16 @@ class RenderAllVideos extends Component{
                 </View>
                 </View>
               </View>
+              </Pressable>
+              </View>
+                )
+            }}
+          </ReactContext.Consumer>
+          
         )
     }
-}
+  
+
 
 export default RenderAllVideos
 
@@ -34,24 +57,29 @@ const Styles = StyleSheet.create({
     width:'100%'
   },
   ListContainer: {
-   marginTop:10,
+   marginTop:5,
+   width:'100%',
   },
   ProfileImage: {
     height:40,
     width:40,
     borderRadius:20,
-    marginTop:4,
+    marginTop:6,
     marginLeft:8,
   },
   SubListsContainer: {
-    width:'90%',
+    width:'100%',
     padding:8,
     flex:1,
     flexDirection:'row',
     alignItems:'flex-start',
   },
   ContentView: {
-    marginLeft: 18,
+    marginLeft: 12,
+    padding:2,
+    width:'100%',
+    flex:1,
+
   },
   TitleText: {
     color: '#231f20',

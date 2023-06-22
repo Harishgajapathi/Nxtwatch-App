@@ -1,7 +1,6 @@
 import {Component} from 'react'
 import {Text, StatusBar, View, FlatList, ScrollView, RefreshControl, Image, StyleSheet, Pressable} from 'react-native'
 import RenderAllVideos  from './RenderAllVideos'
-import Header  from './Header';
 
 class AllVideos extends Component{
     state = {homeVideos: []}
@@ -9,6 +8,8 @@ class AllVideos extends Component{
     componentDidMount() {
         this.getVideos()
       }
+
+     
     
       getVideos = async () => {
         const jwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJhaHVsIiwicm9sZSI6IlBSSU1FX1VTRVIiLCJpYXQiOjE2MjMwNjU1MzJ9.D13s5wN3Oh59aa_qtXMo3Ec4wojOx0EZh8Xr5C5sRkU"
@@ -42,7 +43,6 @@ class AllVideos extends Component{
         return(
                 <View style={Styles.MainContainer}>
                   <StatusBar/>
-                  <Header/>
                     <FlatList data={homeVideos} 
                     renderItem={({item}) => (
                       <RenderAllVideos videodetails={item}/>
@@ -59,6 +59,7 @@ export default AllVideos
 const Styles = StyleSheet.create({
   MainContainer: {
     flex:1,
+    backgroundColor: '#ffffff',
   },
   ImageEdit:{
     width:'100%'
@@ -71,7 +72,7 @@ ImgaeControl: {
 HeaderContainer: {
   height:40,
   marginTop:20,
-  backgroundColor: ' #f1f5f9',
+  backgroundColor: '#f1f5f9',
 
 },
 HeaderLogo: {

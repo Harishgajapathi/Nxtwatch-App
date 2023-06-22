@@ -1,12 +1,8 @@
 import React from 'react'
 
 const ReactContext = React.createContext({
-  isDarkTheme: false,
-  savedVideos: [],
-  activeTab: 'Home',
-  toggleTheme: () => {},
-  changeTab: () => {},
-  addVideo: () => {},
+  activeId: '',
+  onChangeActiveId: () => {},
 })
 
 export default ReactContext
